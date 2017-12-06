@@ -18,7 +18,7 @@ export class HeroesComponent implements OnInit {
   // sets the value of the instance variable selectedHero
   // the passed hero object. returns nothing
   onSelect(hero: Hero): void {
-    
+    console.log(hero);
     this.selectedHero = hero;
 
   }
