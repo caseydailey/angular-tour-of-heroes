@@ -28,6 +28,15 @@ export class HeroService {
   };
 
   
+  /******
+   * 
+   * get methods
+   * 
+   * ********/
+   
+  
+  
+
   // get heroes from the server
   getHeroes(): Observable<Hero[]> {
 
@@ -54,6 +63,13 @@ export class HeroService {
                     );
 
   }
+
+
+  /****
+   * 
+   * save methods
+   * 
+   */
 
   updateHero(hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, this.httpOptions)
@@ -84,8 +100,24 @@ export class HeroService {
 
   }
 
+  /*********
+   * 
+   * search
+   * 
+   */
 
-  
+
+  searchHeroes(term: string): Observable<Hero[]> {
+    if (!term.trim()) {
+      // if not search term, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`api/heroes/?name=${term}`)
+               .pipe(
+                  tap(_ => this.log(`found heroes matching "${term}"`)),
+                  catchError(this.handleError<Hero[]>('searchHeroes', []))
+                );
+  }
 
   /**
  * Handle Http operation that failed.
