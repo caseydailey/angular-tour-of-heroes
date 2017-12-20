@@ -16,6 +16,8 @@ export class HeroesComponent implements OnInit {
   // and identifies it as a HeroService injection site.
   constructor(private heroService: HeroService) {}
   
+  // when this component is initialized
+  // get the heroes
   ngOnInit() {
     this.getHeroes();
   }
@@ -27,5 +29,27 @@ export class HeroesComponent implements OnInit {
     this.heroService.getHeroes()
       .subscribe(heroes => this.heroes = heroes);
   }
+
+  add(name: string): void {
+    name = name.trim();
+    if (!name) return;
+    this.heroService.addHero({ name } as Hero)
+        .subscribe(hero => {
+          this.heroes.push(hero);
+        });
+  }
   
+  delete(hero: Hero): void {
+
+    // though actual removal of the hero from the data is delegated to the heroService,
+    // the component is still responsible for removing the hero from it's own list 
+    // we do so here, assuming the delete will work.
+    this.heroes = this.heroes.filter(h => h !== hero);
+
+    // we don't need to do anything with the Observable returned by deleteHero()
+    // but we must subscribe anyway. if you do not, the delete will not send
+    // an Observable does nothing unril something subscribes
+    this.heroService.deleteHero(hero).subscribe();
+  }
+
 }
