@@ -4,6 +4,7 @@ import { HEROES } from './mock-heroes';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { MessageService } from './message.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class HeroService {
@@ -11,7 +12,7 @@ export class HeroService {
   getHeroes(): Observable<Hero[]> {
 
     this.messageService.add('HeroService: fetched heroes');
-    return of(HEROES);
+    return this.http.get<Hero[]>(this.heroesUrl);
   }
 
   getHero(id: number): Observable<Hero> {
@@ -26,6 +27,14 @@ export class HeroService {
 
   }
 
-  constructor(private messageService: MessageService) { }
+  private log(message: string) {
+    this.messageService.add('HeroService: ' + message);
+  }
+
+  private heroesUrl = 'api/heroes'; // URL to web api
+
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService) { }
 
 }
